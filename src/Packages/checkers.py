@@ -12,7 +12,7 @@ class Checkers:
         if new_criteria is not None:
             self.criteria = new_criteria
         self.criteria = (cv.TERM_CRITERIA_EPS + cv.TERM_CRITERIA_MAX_ITER, 30, 0.001) 
-        self.capture = None
+        self.capture = None # stores VideoCapture object
         
         # prepare object points, like (0,0,0), (1,0,0), (2,0,0) ....,(6,5,0)
         self.objp = np.zeros((self.board_dimensions[0] * self.board_dimensions[1],3), np.float32)
@@ -83,7 +83,7 @@ class Checkers:
             print("No Corners Detected.")
             continue
         
-    def drawCheckers(self):
+    def drawCheckers(self) -> None:
         if not self.verifyCorners():
             #print("No corners to DRAW. ")
             return  self
@@ -92,7 +92,7 @@ class Checkers:
         
         cv.drawChessboardCorners(frameCopy, (self.board_dimensions), self.corners, self.ret)
         print("Drawn successfully ")
-        return frameCopy
+        # return frameCopy
         
     def appendCorners(self):
         if not self.verifyCorners():

@@ -4,7 +4,7 @@ from Packages.video import VideoCapture
 from Packages.checkers import Checkers
 Chess_Board_Dimensions = (8, 8)
 
-n = 0  # image counter
+n = 0 # image counter
 
 # checks images dir is exist or not
 image_path = "/Users/emmelinechow/Documents/Coding/Python/4. OpenCV Object Recognition/images"
@@ -23,17 +23,36 @@ capture =  VideoCapture(0).start() # Begins capturing
 board = Checkers(Chess_Board_Dimensions, criteria).setCapture(capture)
 board.start() # Begins detecting checkers from capture
 
+
 while (True):
     
-    drawn = board.drawCheckers()
+    board.drawCheckers()
     
+    
+    cv.putText(
+        board.capture.frame,
+        f"saved_img : {n}",
+        (30, 40),
+        cv.FONT_HERSHEY_PLAIN,
+        1.4,
+        (0, 255, 0),
+        2,
+        cv.LINE_AA,
+)
+
     cv.imshow('window', board.capture.frame)
-    
-    
-    if cv.waitKey(1) == ord('q'):
+
+    key = cv.waitKey(1)
+
+    if key == ord('q'):
         board.stop()
         capture.stop()
         cv.destroyAllWindows()
         break
+    if key == ord('s') and board.ret:
+        cv.imwrite(f"images/image{n}.png", board.capture.frame)
+        
+        print(f"Saved image {n} successfully.")
+        n +=1 # increment n
     
 print("Program ended")
