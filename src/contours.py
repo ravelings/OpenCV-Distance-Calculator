@@ -1,4 +1,4 @@
-import cv2 as cv 
+import cv2 as cv
 import numpy as np 
 
 from Packages.vision import vision
@@ -26,6 +26,10 @@ def drawBound(image, contours):
     cv.rectangle(image, (x, y), (x+w, y+h), (0, 255, 0), 3)
     
 def main() -> None:
+
+    cv.namedWindow('window', cv.WINDOW_NORMAL)
+    cv.resizeWindow('window', 1200, 1200)
+
     filter = hsvFilter(155, 10, 255, 100, 255, 180)
 
     image = cv.imread("orange_box.jpeg", cv.IMREAD_UNCHANGED)
