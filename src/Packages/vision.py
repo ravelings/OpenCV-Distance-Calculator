@@ -2,7 +2,7 @@ import cv2 as cv
 import numpy as np
 import threading
 from time import sleep
-from hsvfilter import hsvFilter
+from Packages.hsvfilter import hsvFilter
 
 class vision:
     filtered_needle = None
@@ -24,10 +24,9 @@ class vision:
     def __init__(self, needle=None, HSV_FILTER=None):
         self.filter = HSV_FILTER
         
-        print("HSV Filter hMax: ", self.filter.hMax)
-        
-        self.filtered_needle = self.apply_hsv_filter(needle)
-        self.resized_needle = self.filtered_needle
+        if needle is not None:
+            self.filtered_needle = self.apply_hsv_filter(needle)
+            self.resized_needle = self.filtered_needle
         
         self.stopped = False
         self.thread = None
@@ -78,7 +77,7 @@ class vision:
         cv.setTrackbarPos('sMax', self.window, 255)
         cv.setTrackbarPos('vMax', self.window, 255)
         
-    def get_filter_from_trackbar(self):
+    def get_filter_from_trackbar(self) -> hsvFilter:
         
         filter = hsvFilter()
         
@@ -92,22 +91,32 @@ class vision:
         filter.vMax = cv.getTrackbarPos('sMax',self.window)
         filter.vMin = cv.getTrackbarPos('sMin',self.window)
         
+        print("hsv filter hMax: ", filter.hMin)
+        
         return filter
 
-    def apply_hsv_filter(self, original_image):
+    def apply_hsv_filter(self, filter=None, image=None) -> np.array:
+
+        if image is None:
+            converted_img = cv.cvtColor(self.exchange.frame, cv.COLOR_BGR2HSV) 
+        else:
+            # assert image is type(np.array), "Image must be type np.array"
+            converted_img = cv.cvtColor(image, cv.COLOR_BGR2HSV) 
+        # creates reference
         
 # This block of code is performing color filtering based on the HSV (Hue, Saturation, Value) values
 # specified by the trackbars. Here's a breakdown of what each step does:
-        converted_img = cv.cvtColor(original_image, cv.COLOR_BGR2HSV)
-        
-        if not self.filter:
-            hsv_filter = self.get_filter_from_trackbar()
-            # Debug
-            print("vMax: ", self.filter.vMax)
-            print("vMin: ", self.filter.vMin)
-        # Set minimum and maximum HSV values to display
-        lower = np.array([self.filter.hMin, self.filter.sMin, self.filter.vMin])
-        upper = np.array([self.filter.hMax, self.filter.sMax, self.filter.vMax])
+        if filter is None:
+            self.filter = self.get_filter_from_trackbar()
+                # Debug
+                #print("vMax: ", self.filter.vMax)
+                #print("vMin: ", self.filter.vMin)
+            # Set minimum and maximum HSV values to display
+            lower = np.array([self.filter.hMin, self.filter.sMin, self.filter.vMin])
+            upper = np.array([self.filter.hMax, self.filter.sMax, self.filter.vMax])
+        else:
+            lower = np.array([filter.hMin, filter.sMin, filter.vMin])
+            upper = np.array([filter.hMax, filter.sMax, filter.vMax])
         print("Lower: ", lower)
         print("Upper: ", upper)   
         # Apply threshold

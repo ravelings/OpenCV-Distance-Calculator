@@ -31,6 +31,7 @@ class VideoCapture:
     def stop(self):
         self.stopped = True
         if self.thread:
+            self.stream.release()
             self.thread.join(timeout=1)
     
     def get(self):
