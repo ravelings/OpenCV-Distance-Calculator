@@ -7,8 +7,10 @@ from Packages.vision import vision
 from Packages.hsvfilter import hsvFilter
 # Detection of contours over live feed of image
 class Contours(vision):
-    def __init__(self, capture=None, filter=None, type='BGR')
+    def __init__(self, capture, filter=None, type='BGR'):
         
+        self.capture = capture
+        self.type = type
         #if self.filter is None:
             #self.filter = hsvFilter(155, 0, 255, 100, 255, 200)
         #else:
@@ -67,9 +69,12 @@ class Contours(vision):
                 return self
             
     def drawBound(self):
-        if len(self.contours) > 0 and self.contours is not None:
+        if self.contours is not None and len(self.contours) > 0:
             x, y, w, h = cv.boundingRect(self.contours[0])
-            canvas = self.capture.frame.copy()
+            if self.type == 'HSV':
+                canvas = self.capture.orig_frame.copy()
+            if self.type == 'LAB':
+                canvas = cv.cvtColor(self.capture.orig_frame, cv.COLOR_Lab2BGR)
             cv.rectangle(canvas, (x, y), (x+w, y+h), (0, 255, 0), 3)
             print("Drawn sucessfully")
             return canvas # type = np.array (image file) 

@@ -58,7 +58,8 @@ class LabImage():
         upper = np.array([filter.LMax, filter.aMax, filter.bMax])
 
         mask = cv.inRange(self.image, lower, upper)
-        self.imageFiltered = cv.bitwise_and(self.image, self.image, mask=mask)
+        result = cv.bitwise_and(self.image, self.image, mask=mask)
+        self.imageFiltered[:] = result
 
     def getImage(self):
         return cv.cvtColor(self.imageFiltered, cv.COLOR_Lab2BGR)

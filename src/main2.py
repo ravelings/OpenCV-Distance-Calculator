@@ -9,12 +9,16 @@ def main() -> None:
     lab = LabImage(image=image)
     lab.init_gui()
     image = ImageCapture(lab.imageFiltered)
-    contours = Contours(image)
-    contours.start()
+    contours = Contours(image, type='LAB')
+    contours.start()  
+
+    cv.namedWindow('contours', cv.WINDOW_NORMAL)
+    cv.namedWindow('Filtered Image', cv.WINDOW_NORMAL)
     while (True):
         lab.applyFiltered()
         display = contours.drawBound()
-        cv.imshow('image', display)
+        cv.imshow('contours', display)
+        cv.imshow('Filtered Image', cv.cvtColor(image.frame, cv.COLOR_Lab2BGR))
         key = cv.waitKey(1)
         if key == ord('q'):
             cv.destroyAllWindows()
