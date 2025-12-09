@@ -7,14 +7,13 @@ from Packages.vision import vision
 from Packages.hsvfilter import hsvFilter
 # Detection of contours over live feed of image
 class Contours(vision):
-    def __init__(self, capture, filter=None):
+    def __init__(self, capture=None, filter=None, type='BGR')
         
-        self.capture = capture 
-        if self.filter is None:
-            self.filter = hsvFilter(155, 0, 255, 100, 255, 200)
-        else:
-            assert filter is hsvFilter, "Type error"
-            self.filter = filter
+        #if self.filter is None:
+            #self.filter = hsvFilter(155, 0, 255, 100, 255, 200)
+        #else:
+            #assert filter is hsvFilter, "Type error"
+            #self.filter = filte    
         self.stopped = False 
         self.thread = None
         
@@ -41,11 +40,16 @@ class Contours(vision):
     def findContours(self):
         
         while not self.stopped:
-            # Applies HSV filter to image
-            filtered_img = self.apply_hsv_filter(filter=self.filter, image=self.capture.frame)
-            # Turn into grayscale
-            gray = cv.cvtColor(filtered_img, cv.COLOR_BGR2GRAY)
             
+            # Applies HSV filter to image
+            #filtered_img = self.apply_hsv_filter(filter=self.filter, image=self.capture.frame)
+            # Turn into grayscale
+            
+            if self.type == 'BGR':
+                gray = cv.cvtColor(self.capture.frame, cv.COLOR_BGR2GRAY)
+            if self.type == 'LAB':
+                temporary = cv.cvtColor(self.capture.frame, cv.COLOR_Lab2BGR)
+                gray = cv.cvtColor(temporary, cv.COLOR_BGR2GRAY)
             # Main function
             ret, thresh = cv.threshold(gray, 65, 255, cv.THRESH_BINARY)
             if (ret):
@@ -68,7 +72,7 @@ class Contours(vision):
             canvas = self.capture.frame.copy()
             cv.rectangle(canvas, (x, y), (x+w, y+h), (0, 255, 0), 3)
             print("Drawn sucessfully")
-            return canvas 
+            return canvas # type = np.array (image file) 
         else:
             print("No contours drawn")
             return self.capture.frame 

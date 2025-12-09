@@ -43,7 +43,8 @@ def main() -> None:
     drawBound(image, contours)
     
     while (True):
-        # filtered_img = visual.apply_hsv_filter_trackbar(image=image)
+        
+        
         cv.imshow('window', image)
         key = cv.waitKey(1)
         if key == ord('q'):

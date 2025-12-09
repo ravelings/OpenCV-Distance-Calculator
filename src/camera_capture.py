@@ -22,7 +22,6 @@ criteria = (cv.TERM_CRITERIA_EPS + cv.TERM_CRITERIA_MAX_ITER, 30, 0.001)
 capture =  VideoCapture(0).start() # Begins capturing
 board = Checkers(Chess_Board_Dimensions, criteria).setCapture(capture)
 board.start() # Begins detecting checkers from capture
-
 while (True):
     
     drawn = board.drawCheckers()
