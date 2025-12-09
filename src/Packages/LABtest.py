@@ -11,7 +11,7 @@ class LabImage:
         self.imageFiltered = self.image.copy()
 
     def init_gui(self):
-        cv.namedWindow(self.window, cv.WINDOW_NORMAL)
+        cv.namedWindow(self.window)
 
         # Dummy function
         def nothing(position):
@@ -53,12 +53,12 @@ class LabImage:
         
         filter = self.get_trackbar_pos()
 
-        lower = np.array([self.filter.LMin, self.filter.aMin, self.filter.bMin])
-        upper = np.array([self.filter.LMax, self.filter.aMax, self.filter.bMax])
+        lower = np.array([filter.LMin, filter.aMin, filter.bMin])
+        upper = np.array([filter.LMax, filter.aMax, filter.bMax])
 
         mask = cv.inRange(self.imageFiltered, lower, upper)
         result = cv.bitwise_and(self.imageFiltered, self.imageFiltered, mask=mask)
 
     def getImage(self):
-        return cv.cvtColor(self.filteredImage, cv.COLOR_Lab2BGR)
+        return cv.cvtColor(self.imageFiltered, cv.COLOR_Lab2BGR)
         

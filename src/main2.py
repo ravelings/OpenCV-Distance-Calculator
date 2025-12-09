@@ -9,11 +9,12 @@ def main() -> None:
     lab = LabImage(image=image)
     lab.init_gui()
 
+    cv.namedWindow('image', cv.WINDOW_NORMAL)
+
     while (True):
         lab.applyFiltered()
         display = lab.getImage()
-        
-        cv.imshow('Image', display)
+        cv.imshow('image', display)
         key = cv.waitKey(1)
 
         if key == ord('q'):
@@ -22,3 +23,5 @@ def main() -> None:
     print("Program ended.")
 
 main()
+
+print("BOop")
